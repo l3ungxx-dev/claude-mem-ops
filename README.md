@@ -1,6 +1,7 @@
 # claude-mem-ops
 
-**Cost-efficient hybrid memory pipeline for [claude-mem](https://github.com/thedotmack/claude-mem).**
+**Cost-efficient hybrid memory pipeline for [claude-mem](https://github.com/thedotmack/claude-mem)**
+— and a reference implementation of the host-agnostic **cost-tiered memory pattern** (see [docs/pattern.md](docs/pattern.md)): filter low-value events, index with a small local model, distill from raw text on a schedule with a strong model, keep the budget bounded.
 
 claude-mem records what your coding agents do. This repo makes it cheap to run **every day** with a local model while keeping the *detail* of what happened:
 
@@ -32,6 +33,22 @@ claude-mem records what your coding agents do. This repo makes it cheap to run *
 | Cloud cost (consolidation only) | — | **≈ ¥0.10 / run, ¥1.5–2.5 / day** |
 | Full-cloud observation alternative | — | ¥16–20 / day |
 | Detail retention | local model summarization loses numbers | raw text kept 30 days + cloud reads it |
+
+## The general pattern (not claude-mem-specific)
+
+The recipe generalizes to any LLM pipeline that mixes high-frequency low-value events with
+low-frequency high-value ones:
+
+```
+raw (keep everything, cheap storage)
+  → filter (drop low-value classes)
+  → index with a small model (frequent, lossy on purpose)
+  → distill from RAW text with a strong model (scheduled, bounded)
+  → solidify into durable knowledge
+```
+
+Read the full write-up: **[docs/pattern.md](docs/pattern.md)** — layers, mechanisms, when the
+pattern applies, and a porting checklist for other systems.
 
 ## Why this exists
 
@@ -119,6 +136,30 @@ systemctl --user restart dsh-web           # required: the patch is a plugin bun
 | `CONSOLIDATE_API_BASE` | `https://api.deepseek.com/v1` | consolidate |
 | `DEEPSEEK_API_KEY` | from `~/.claude-mem/consolidate.env` | consolidate |
 | `CLOUD_ROUTER_MONITOR` | `<repo>/docs/memory/.monitor/cloud-router.md` | queue-cloud-router |
+
+## Related work / prior art
+
+The ideas combined here are not new on their own — this is a *combination* tuned for agent memory,
+and the credit belongs to these projects:
+
+**Request-level cost optimization** (which model answers a given request):
+[RouteLLM](https://github.com/lm-sys/RouteLLM) ·
+[FrugalGPT](https://github.com/stanford-futuredata/FrugalGPT) ·
+[LLMRouter](https://github.com/ulab-uiuc/LLMRouter) ·
+[GPTCache](https://github.com/zilliztech/GPTCache)
+
+**Memory tiering** (what to remember, where to keep it):
+[total-recall](https://github.com/davegoldblatt/total-recall) ·
+[MemGPT / Letta](https://github.com/letta-ai/letta) ·
+[Mem0](https://github.com/mem0ai/mem0)
+
+**Academic:** FrugalGPT (model cascade), TierMem (cheap summaries vs trustworthy evidence),
+MemGPT (virtual context management).
+
+**Our difference:** those operate at the request level (routing/caching) or the storage level
+(memory tiering). This repo operates at the **data-processing pipeline** level — filter → local
+index → scheduled cloud distillation from raw evidence → budget control — packaged as an
+installable workflow with measured numbers.
 
 ## Notes & pitfalls
 
