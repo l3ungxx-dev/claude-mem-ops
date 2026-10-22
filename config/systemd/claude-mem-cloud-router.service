@@ -1,0 +1,8 @@
+[Unit]
+Description=claude-mem queue pressure valve (temporarily route observer to cloud when backlogged)
+After=claude-mem.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=-%h/.config/claude-mem-ops/env
+ExecStart=/usr/bin/python3 %h/.local/share/claude-mem-ops/queue-cloud-router.py --tick --budget 3

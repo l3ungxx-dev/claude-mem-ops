@@ -1,0 +1,10 @@
+[Unit]
+Description=Hourly claude-mem consolidation
+
+[Timer]
+OnCalendar=*-*-* *:00:00
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

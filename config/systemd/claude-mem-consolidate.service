@@ -1,0 +1,9 @@
+[Unit]
+Description=claude-mem layered consolidation (local index + cloud raw-text summaries)
+After=claude-mem.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=-%h/.config/claude-mem-ops/env
+ExecStart=/usr/bin/python3 %h/.local/share/claude-mem-ops/consolidate.py --auto
+Nice=10

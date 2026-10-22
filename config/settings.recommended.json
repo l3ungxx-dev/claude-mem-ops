@@ -1,0 +1,17 @@
+{
+  "CLAUDE_MEM_PROVIDER": "openai-compatible",
+  "CLAUDE_MEM_OPENAI_COMPAT_PRESET": "ollama",
+  "CLAUDE_MEM_OPENAI_COMPAT_MODEL": "qwen2.5:3b",
+  "CLAUDE_MEM_CLAUDE_OBSERVATION_BATCH_SIZE": 12,
+  "CLAUDE_MEM_MAX_CONCURRENT_AGENTS": 2,
+  "CLAUDE_MEM_OBSERVER_CONTEXT_WINDOW": 40000,
+  "CLAUDE_MEM_OBSERVER_MAX_OUTPUT_TOKENS": 4096,
+  "CLAUDE_MEM_OBSERVER_MAX_CONVERSATION_CHARS": 150000,
+  "CLAUDE_MEM_TOOL_USES_RETENTION_DAYS": 30,
+  "CLAUDE_MEM_SKIP_TOOLS": "ListMcpResourcesTool,SlashCommand,Skill,TodoWrite,AskUserQuestion,read_image,job_output,job_list,list_agents,present,work_state_write,work_state_read,todo_write,job_kill,bash,read",
+  "CLAUDE_MEM_SKIP_BASH_PATTERNS": "^(cd\\s+[^\\s;&|<>]+\\s*(&&|;)\\s*)*((ls|cat|head|tail|wc|grep|rg|find|fd|sed\\s+-n|awk|cut|sort|uniq|tr|stat|file|tree|du|df|date|pwd|echo|printf|free|uptime|whoami|id|env|printenv|ps|ss|netstat|lsof|nvidia-smi|sleep|journalctl|jq|diff|md5sum|sha256sum|realpath|readlink|basename|dirname|which|type|git\\s+(status|log|diff|show|branch|remote|rev-parse|config\\s+--get)|systemctl(\\s+--user)?\\s+(status|show|is-active|is-enabled|list-units|list-timers|cat)|timeout\\s+[0-9]+\\s+(grep|cat|ls|find|rg))(\\s[^;&|<>]*)?)(\\s*(\\||&&|;)\\s*(ls|cat|head|tail|wc|grep|rg|find|sed\\s+-n|awk|cut|sort|uniq|tr|jq|stat|file|which|type|echo)(\\s[^;&|<>]*)?)*$",
+  "CLAUDE_MEM_CONTEXT_OBSERVATION_TYPES": "decision,bugfix,feature,change,security_note,security_alert,refactor",
+  "CLAUDE_MEM_CONTEXT_OBSERVATIONS": 20,
+  "CLAUDE_MEM_DEDUP_ENABLED": "true",
+  "CLAUDE_MEM_SKIP_SUBAGENT_OBSERVATIONS": "true"
+}

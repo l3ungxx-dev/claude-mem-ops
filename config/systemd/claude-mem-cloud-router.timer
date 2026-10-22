@@ -1,0 +1,10 @@
+[Unit]
+Description=Every-minute claude-mem backlog check
+
+[Timer]
+OnActiveSec=30s
+OnUnitActiveSec=1min
+AccuracySec=10s
+
+[Install]
+WantedBy=timers.target
