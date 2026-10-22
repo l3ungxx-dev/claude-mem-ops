@@ -39,6 +39,32 @@ claude-mem records what your coding agents do. This repo makes it cheap to run *
 - Watching every tool call produces a **logbook**, not memory. Skipping `bash`/`read`/management tools leaves only changes and decisions.
 - A small local model is fine for indexing but **loses details when summarizing**. Keep the raw text and let a strong cloud model consolidate from raw data on a timer.
 
+## Minimal setup vs optional add-ons
+
+**You do not need everything in this repo.** The daily value comes from four things:
+
+### Core four — all you need for cheap, accurate daily memory
+
+| # | What | How | Effort / hardware |
+|---|---|---|---|
+| 1 | Skip low-value tools (`bash`, `read`, management tools) | settings only | 5 min / zero |
+| 2 | Small local observer model (index only, e.g. `qwen2.5:3b`) | settings only | 4 GB VRAM or CPU |
+| 3 | Keep raw tool-call text 30 days | settings only | zero |
+| 4 | Scheduled cloud consolidation **from raw text** | `consolidate.py` + systemd timer | 20 min / API key |
+
+If you only do #1 and #3, you already remove the logbook problem and keep the evidence.
+#4 turns evidence into conclusions; #2 makes retrieval/injection work without paying for cloud observation.
+
+### Optional add-ons — only install if the scenario applies
+
+| Add-on | When it helps | Skip it if |
+|---|---|---|
+| `queue-cloud-router.py` (pressure valve) | extreme backlog (`queueDepth` ≥ 1000) on a busy multi-session machine | your backlog is normally near zero after step 1 |
+| `compact-knowledge.py` + `knowledge_rules.py` | you keep a hand-maintained semantic doc and want a ≤250-line guard | you do not maintain such a file (most users) |
+| `patch-dsh-work-state.py` | you use the DeepSeek Harness (DSH) integration and want `work_state_*` tools | you use Claude Code / Codex / other hosts |
+
+> TL;DR: install the **core four**; everything else is situational.
+
 ## Quick start
 
 Requirements: Linux with systemd `--user`, Python ≥ 3.10, claude-mem ≥ 15.0.1, (optional) DeepSeek/OpenAI-compatible API key.
@@ -77,12 +103,12 @@ systemctl --user restart dsh-web           # required: the patch is a plugin bun
 
 ## Scripts
 
-| Script | Purpose |
-|---|---|
-| `scripts/consolidate.py` | Layered consolidation (hourly→yearly) **from raw tool-call text**, with token/cost accounting |
-| `scripts/queue-cloud-router.py` | When `queueDepth` ≥ threshold, temporarily route the observer to a cloud model; switch back when drained or when the daily budget is spent |
-| `scripts/patch-dsh-work-state.py` | Idempotent patch for `@claude-mem/dsh` adding `work_state_write/read` tools |
-| `scripts/compact-knowledge.py`, `knowledge_rules.py` | Optional semantic-doc guard (keeps a hand-maintained knowledge file ≤ 250 lines) |
+| Script | Core? | Purpose |
+|---|---|---|
+| `scripts/consolidate.py` | ✅ core | Layered consolidation (hourly→yearly) **from raw tool-call text**, with token/cost accounting |
+| `scripts/queue-cloud-router.py` | optional | When `queueDepth` ≥ threshold, temporarily route the observer to a cloud model; switch back when drained or when the daily budget is spent |
+| `scripts/patch-dsh-work-state.py` | optional (DSH) | Idempotent patch for `@claude-mem/dsh` adding `work_state_write/read` tools |
+| `scripts/compact-knowledge.py`, `knowledge_rules.py` | optional | Semantic-doc guard (keeps a hand-maintained knowledge file ≤ 250 lines); not part of the memory pipeline |
 
 ## Environment variables
 
