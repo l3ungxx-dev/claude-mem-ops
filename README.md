@@ -103,6 +103,26 @@ See [`docs/pitfalls.md`](docs/pitfalls.md). Highlights:
 - `POST /api/settings` silently ignores API-key writes; keys live in `~/.claude-mem/.env`.
 - Scripts read claude-mem's SQLite schema (`observations`, `tool_uses`) and HTTP endpoints (`/api/settings`, `/api/processing-status`); pin to a tested claude-mem version.
 
+## Provenance
+
+This is an **independent implementation**, not affiliated with claude-mem or its author.
+
+It was developed and measured on a single workstation on **2026-10-22** (times CST / UTC):
+
+| Milestone | CST | UTC |
+|---|---|---|
+| consolidation script refactored from local helpers | 16:10 | 08:10 |
+| README written | 16:25 | 08:25 |
+| repository first published | 16:26:36 | 08:26:36 |
+| upstream comments posted (#4967 / #4963) | 16:26:56 / 16:27:00 | 08:26:56 / 08:27:00 |
+
+At publication time, GitHub code search (`CLAUDE_MEM_SKIP_TOOLS`, `claude-mem consolidation`,
+`claude-mem queueDepth`), repository search, and the claude-mem issue tracker showed **no public
+implementation of the same approach**. The closest items were direction discussions
+([#4963](https://github.com/thedotmack/claude-mem/issues/4963) tier routing,
+[#4967](https://github.com/thedotmack/claude-mem/issues/4967) batching) and unrelated memory tools.
+Any later similar work is independent parallel development.
+
 ## License
 
 MIT — see [LICENSE](LICENSE). Not affiliated with claude-mem.
